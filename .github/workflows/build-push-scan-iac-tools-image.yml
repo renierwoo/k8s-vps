@@ -42,7 +42,7 @@ jobs:
         uses: docker/scout-action@v1
         with:
           command: cves, recommendations, compare
-          to-latest: true
+          image: ${{ vars.DOCKERHUB_USERNAME }}/iac-tools:latest
           ignore-base: true
           ignore-unchanged: true
           only-fixed: true
