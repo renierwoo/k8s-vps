@@ -43,7 +43,7 @@ WORKDIR /tmp
 COPY requirements.txt /tmp/
 
 RUN set -ex; \
-    pip install --no-cache-dir --upgrade --break-system-packages pip; \
+    pip install --no-cache-dir --upgrade --break-system-packages pip==25.1.1; \
     pip install --no-cache-dir --upgrade --break-system-packages --use-pep517 --requirement requirements.txt; \
     rm -rf /tmp/* /var/tmp/* /var/cache/apt/* /var/lib/apt/lists/*
 
