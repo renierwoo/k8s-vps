@@ -41,7 +41,7 @@ jobs:
       - name: Scan for vulnerabilities with Docker Scout
         uses: docker/scout-action@v1
         with:
-          command: cves, recommendations, compare
+          command: cves, recommendations
           image: ${{ vars.DOCKERHUB_USERNAME }}/iac-tools:latest
           ignore-base: true
           ignore-unchanged: true
