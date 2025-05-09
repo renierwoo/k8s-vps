@@ -1,10 +1,6 @@
-# This is a workflow to help you build and push the IaC Tools Docker image
+name: Build, Push and Scan the IaC Tools Docker Image
 
-name: Build and Push the IaC Tools Docker Image
-
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push events but only for the "main" branch and only if the path matches "tools/iac/**"
   push:
     branches:
       - main
@@ -17,7 +13,7 @@ on:
   #     - "tools/iac/**"
 
 jobs:
-  build:
+  build_push:
     runs-on: ubuntu-latest
     steps:
       - name: Login to Docker Hub
@@ -32,17 +28,21 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      # - name: Checkout
-      #   uses: actions/checkout@v4
-
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
-          context: "{{defaultContext}}:tools/iac"
           push: true
           tags: ${{ vars.DOCKERHUB_USERNAME }}/iac-tools:latest
-          # context: tools/iac
-          # file: tools/iac/Dockerfile
+          context: "{{defaultContext}}:tools/iac"
           file: Dockerfile
           provenance: true
           sbom: true
+
+      - name: Scan for vulnerabilities with Docker Scout
+        uses: docker/scout-action@v1
+        with:
+          command: cves, recommendations, compare
+          to-latest: true
+          ignore-base: true
+          ignore-unchanged: true
+          only-fixed: true
