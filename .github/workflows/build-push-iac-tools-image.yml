@@ -1,0 +1,41 @@
+# This is a workflow to help you build and push the IaC Tools Docker image
+
+name: Build and Push the IaC Tools Docker Image
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push events but only for the "main" branch and only if the path matches "tools/iac/**"
+  push:
+    branches:
+      - main
+    paths:
+      - "tools/iac/**"
+  # pull_request:
+  #   branches:
+  #     - main
+  #   paths:
+  #     - "tools/iac/**"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          push: true
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/iac-tools:latest
+          provenance: true
+          sbom: true
