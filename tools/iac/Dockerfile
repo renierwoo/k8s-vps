@@ -17,8 +17,6 @@ RUN set -ex; \
     python3-pip \
     python3-venv \
     unzip; \
-    cd /usr/bin; \
-    ln --symbolic python3 python; \
     apt-get --quiet=2 --assume-yes autoremove; \
     rm -rf /tmp/* /var/tmp/* /var/cache/apt/* /var/lib/apt/lists/*
 
@@ -39,8 +37,6 @@ RUN set -ex; \
     exit 1; \
     fi
 
-WORKDIR /app
-
 COPY requirements.txt .
 
 RUN set -ex; \
@@ -48,10 +44,16 @@ RUN set -ex; \
     pip install --no-cache-dir --upgrade --break-system-packages --use-pep517 --requirement requirements.txt; \
     rm -rf /tmp/* /var/tmp/* /var/cache/apt/* /var/lib/apt/lists/*
 
+WORKDIR /usr/bin
+
+RUN set -ex; \
+    ln --symbolic python3 python
 
 COPY docker-entrypoint.sh /usr/local/bin/
 
 RUN set -ex; \
     chmod +x /usr/local/bin/docker-entrypoint.sh
+
+WORKDIR /app
 
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
