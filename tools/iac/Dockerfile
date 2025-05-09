@@ -2,6 +2,7 @@ FROM debian:stable-slim
 
 ARG TERRAFORM_VERSION
 
+# hadolint ignore=DL3008
 RUN set -ex; \
     apt-get --quiet=2 --assume-yes update; \
     apt-get --quiet=2 --assume-yes upgrade; \
@@ -37,7 +38,9 @@ RUN set -ex; \
     exit 1; \
     fi
 
-COPY requirements.txt .
+WORKDIR /tmp
+
+COPY requirements.txt /tmp/
 
 RUN set -ex; \
     pip install --no-cache-dir --upgrade --break-system-packages pip; \
