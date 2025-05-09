@@ -35,20 +35,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: List files in context directory
-        run: |
-          echo "Showing the current directory:"
-          pwd
-          echo "Listing files in the current directory:"
-          ls -lha
-          exit 1
-
-      # - name: Build and push
-      #   uses: docker/build-push-action@v6
-      #   with:
-      #     push: true
-      #     tags: ${{ vars.DOCKERHUB_USERNAME }}/iac-tools:latest
-      #     context: tools/iac
-      #     file: tools/iac/Dockerfile
-      #     provenance: true
-      #     sbom: true
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          push: true
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/iac-tools:latest
+          context: tools/iac
+          file: tools/iac/Dockerfile
+          provenance: true
+          sbom: true
