@@ -2,4 +2,4 @@
 
 set -ex
 
-echo "Executing entrypoint script..."
+exec "$@"
