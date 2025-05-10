@@ -4,10 +4,10 @@ ARG TERRAFORM_VERSION
 
 # hadolint ignore=DL3008
 RUN set -o errexit -o xtrace; \
-    apt --quiet=2 --assume-yes update; \
-    apt --quiet=2 --assume-yes upgrade; \
-    apt --quiet=2 --assume-yes full-upgrade; \
-    apt --quiet=2 --assume-yes --no-install-recommends --no-install-suggests install \
+    apt-get --quiet=2 --assume-yes update; \
+    apt-get --quiet=2 --assume-yes upgrade; \
+    apt-get --quiet=2 --assume-yes full-upgrade; \
+    apt-get --quiet=2 --assume-yes --no-install-recommends --no-install-suggests install \
     curl \
     docker.io \
     gettext-base \
@@ -20,8 +20,8 @@ RUN set -o errexit -o xtrace; \
     python3-venv \
     sshpass \
     unzip; \
-    apt --quiet=2 --assume-yes autoremove; \
-    apt --quiet=2 --assume-yes autoclean; \
+    apt-get --quiet=2 --assume-yes autoremove; \
+    apt-get --quiet=2 --assume-yes autoclean; \
     rm --recursive --force /tmp/* /var/tmp/* /var/cache/apt/* /var/lib/apt/lists/*
 
 RUN set -o errexit -o xtrace; \
