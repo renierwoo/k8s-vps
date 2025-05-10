@@ -32,6 +32,7 @@ jobs:
           file: Dockerfile
           build-args: |
             TERRAFORM_VERSION=${{ vars.TERRAFORM_VERSION }}
+          platforms: linux/amd64,linux/arm64
           provenance: true
           sbom: true
 
