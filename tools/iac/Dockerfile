@@ -14,6 +14,7 @@ RUN set -o errexit -o xtrace; \
     git \
     jq \
     less \
+    openssh-client \
     openssl \
     python3 \
     python3-pip \
