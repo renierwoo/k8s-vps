@@ -3,10 +3,11 @@ FROM debian:stable-slim
 ARG TERRAFORM_VERSION
 
 # hadolint ignore=DL3008
-RUN set -ex; \
-    apt-get --quiet=2 --assume-yes update; \
-    apt-get --quiet=2 --assume-yes upgrade; \
-    apt-get --quiet=2 --assume-yes --no-install-recommends --no-install-suggests install \
+RUN set -o errexit -o xtrace; \
+    apt --quiet=2 --assume-yes update; \
+    apt --quiet=2 --assume-yes upgrade; \
+    apt --quiet=2 --assume-yes full-upgrade; \
+    apt --quiet=2 --assume-yes --no-install-recommends --no-install-suggests install \
     curl \
     docker.io \
     gettext-base \
@@ -17,11 +18,13 @@ RUN set -ex; \
     python3 \
     python3-pip \
     python3-venv \
+    sshpass \
     unzip; \
-    apt-get --quiet=2 --assume-yes autoremove; \
-    rm -rf /tmp/* /var/tmp/* /var/cache/apt/* /var/lib/apt/lists/*
+    apt --quiet=2 --assume-yes autoremove; \
+    apt --quiet=2 --assume-yes autoclean; \
+    rm --recursive --force /tmp/* /var/tmp/* /var/cache/apt/* /var/lib/apt/lists/*
 
-RUN set -ex; \
+RUN set -o errexit -o xtrace; \
     temp_arch="$(arch)"; \
     if [ "$temp_arch" = "x86_64" ]; then \
     curl "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip" --output "terraform_${TERRAFORM_VERSION}_linux_amd64.zip"; \
@@ -43,19 +46,19 @@ WORKDIR /tmp
 COPY requirements.txt /tmp/
 
 # hadolint ignore=DL3013
-RUN set -ex; \
+RUN set -o errexit -o xtrace; \
     pip install --no-cache-dir --upgrade --break-system-packages pip; \
     pip install --no-cache-dir --upgrade --break-system-packages --use-pep517 --requirement requirements.txt; \
     rm -rf /tmp/* /var/tmp/* /var/cache/apt/* /var/lib/apt/lists/*
 
 WORKDIR /usr/bin
 
-RUN set -ex; \
+RUN set -o errexit -o xtrace; \
     ln --symbolic python3 python
 
 COPY docker-entrypoint.sh /usr/local/bin/
 
-RUN set -ex; \
+RUN set -o errexit -o xtrace; \
     chmod +x /usr/local/bin/docker-entrypoint.sh
 
 WORKDIR /app
