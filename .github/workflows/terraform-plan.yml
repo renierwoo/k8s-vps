@@ -13,6 +13,56 @@ on:
       - "terraform/**"
 
 jobs:
+  tflint:
+    if: github.event_name == 'pull_request'
+
+    defaults:
+      run:
+        working-directory: terraform
+
+    runs-on: ubuntu-latest
+
+    env:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      TF_VAR_connection_host: ${{ secrets.TF_VAR_CONNECTION_HOST }}
+      TF_VAR_connection_port: ${{ secrets.TF_VAR_CONNECTION_PORT }}
+      TF_VAR_connection_user: ${{ secrets.TF_VAR_CONNECTION_USER }}
+      TF_VAR_connection_private_key: ${{ secrets.TF_VAR_CONNECTION_PRIVATE_KEY }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - uses: actions/cache@v4
+        name: Cache plugin dir
+        with:
+          path: ~/.tflint.d/plugins
+          key: ubuntu-latest-tflint-${{ hashFiles('.tflint.hcl') }}
+
+      - uses: terraform-linters/setup-tflint@v4
+        name: Setup TFLint
+        with:
+          tflint_version: latest
+
+      - name: Show version
+        run: tflint --version
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Fmt
+        id: fmt
+        run: terraform fmt -check -diff -recursive
+
+      - name: Init TFLint
+        run: tflint --init
+        env:
+          # https://github.com/terraform-linters/tflint/blob/master/docs/user-guide/plugins.md#avoiding-rate-limiting
+          GITHUB_TOKEN: ${{ github.token }}
+
+      - name: Run TFLint
+        run: tflint -f compact
+
   terraform_plan:
     if: github.event_name == 'pull_request'
 
