@@ -6,3 +6,9 @@ module "vps_setup" {
   connection_port        = var.connection_port
   connection_private_key = var.connection_private_key
 }
+
+module "s3_bucket" {
+  source = "terraform-aws-modules/s3-bucket/aws"
+
+  bucket = "my-s3-bucket"
+}
