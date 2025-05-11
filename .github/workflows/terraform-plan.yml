@@ -1,0 +1,55 @@
+name: Execute Terraform Plan
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "terraform/**"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "terraform/**"
+
+jobs:
+  terraform_plan:
+    if: github.event_name == 'pull_request'
+
+    defaults:
+      run:
+        working-directory: terraform
+
+    runs-on: ubuntu-latest
+
+    env:
+      DOCKERHUB_USERNAME: ${{ vars.DOCKERHUB_USERNAME }}
+      TF_VAR_CONNECTION_HOST: ${{ vars.TF_VAR_CONNECTION_HOST }}
+      TF_VAR_CONNECTION_PORT: ${{ vars.TF_VAR_CONNECTION_PORT }}
+      TF_VAR_CONNECTION_USER: ${{ vars.TF_VAR_CONNECTION_USER }}
+      TF_VAR_CONNECTION_PRIVATE_KEY: ${{ secrets.TF_VAR_CONNECTION_PRIVATE_KEY }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Fmt
+        id: fmt
+        run: terraform fmt -check -diff -recursive
+        continue-on-error: true
+
+      - name: Terraform Init
+        id: init
+        run: terraform init -input=false
+
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate -no-color
+
+      - name: Terraform Plan
+        id: plan
+        run: terraform plan -no-color -input=false
+        continue-on-error: true
