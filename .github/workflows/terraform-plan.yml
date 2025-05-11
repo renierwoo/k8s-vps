@@ -53,11 +53,6 @@ jobs:
     if: github.event_name == 'pull_request'
 
     needs: tflint
-
-    # defaults:
-    #   run:
-    #     working-directory: terraform
-
     runs-on: ubuntu-latest
 
     env:
@@ -79,19 +74,19 @@ jobs:
       - name: Run Trivy vulnerability scanner in repo mode
         uses: aquasecurity/trivy-action@0.30.0
         with:
-          scan-type: 'config'
+          scan-type: "config"
           # hide-progress: true
-          format: 'sarif'
-          output: 'trivy-results.sarif'
-          exit-code: '1'
-          severity: 'UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL'
-          scan-ref: 'terraform/modules/vps-setup/'
+          format: "sarif"
+          output: "trivy-results.sarif"
+          exit-code: "1"
+          severity: "UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL"
+          scan-ref: "terraform/"
           skip-setup-trivy: true
 
       - name: Upload Trivy scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v3
         with:
-          sarif_file: 'trivy-results.sarif'
+          sarif_file: "trivy-results.sarif"
 
   terraform_plan:
     if: github.event_name == 'pull_request'
