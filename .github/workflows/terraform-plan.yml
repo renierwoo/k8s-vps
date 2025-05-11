@@ -54,9 +54,9 @@ jobs:
 
     needs: tflint
 
-    defaults:
-      run:
-        working-directory: terraform
+    # defaults:
+    #   run:
+    #     working-directory: terraform
 
     runs-on: ubuntu-latest
 
@@ -70,11 +70,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Manual Trivy Setup
-        uses: aquasecurity/setup-trivy@v0.2.3
-        with:
-          cache: true
-          version: v0.62.1
+      # - name: Manual Trivy Setup
+      #   uses: aquasecurity/setup-trivy@v0.2.3
+      #   with:
+      #     cache: true
+      #     version: v0.62.1
 
       - name: Run Trivy vulnerability scanner in repo mode
         uses: aquasecurity/trivy-action@0.30.0
@@ -85,8 +85,8 @@ jobs:
           output: 'trivy-results.sarif'
           exit-code: '1'
           severity: 'UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL'
-          scan-ref: './'
-          skip-setup-trivy: true
+          scan-ref: 'terraform/'
+          # skip-setup-trivy: true
 
       - name: Upload Trivy scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v3
