@@ -15,7 +15,7 @@ variable "connection_port" {
   type        = string
   sensitive   = true
 }
-variable "connection_private_keys" {
+variable "connection_private_key" {
   description = "The private key to use for the connection."
   type        = string
   sensitive   = true
