@@ -26,7 +26,6 @@ locals {
   }
 }
 
-#trivy:ignore:aws-ec2-no-public-ingress-sgr[from_port=1000,type=egress]
 resource "aws_security_group_rule" "example" {
   for_each = { for k, v in local.rules : k => v }
 
