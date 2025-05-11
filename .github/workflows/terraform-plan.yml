@@ -54,9 +54,9 @@ jobs:
 
     needs: tflint
 
-    defaults:
-      run:
-        working-directory: terraform
+    # defaults:
+    #   run:
+    #     working-directory: terraform
 
     runs-on: ubuntu-latest
 
