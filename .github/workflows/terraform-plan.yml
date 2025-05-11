@@ -85,6 +85,7 @@ jobs:
           output: 'trivy-results.sarif'
           exit-code: '1'
           severity: 'CRITICAL,HIGH'
+          scan-ref: terraform/
           skip-setup-trivy: true
 
       - name: Upload Trivy scan results to GitHub Security tab
