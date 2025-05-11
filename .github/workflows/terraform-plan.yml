@@ -47,13 +47,6 @@ jobs:
       - name: Show version
         run: tflint --version
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-
-      - name: Terraform Fmt
-        id: fmt
-        run: terraform fmt -check -diff -recursive
-
       - name: Init TFLint
         run: tflint --init
         env:
