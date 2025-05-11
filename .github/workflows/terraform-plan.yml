@@ -24,10 +24,10 @@ jobs:
 
     env:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      TF_VAR_CONNECTION_HOST: ${{ secrets.TF_VAR_CONNECTION_HOST }}
-      TF_VAR_CONNECTION_PORT: ${{ secrets.TF_VAR_CONNECTION_PORT }}
-      TF_VAR_CONNECTION_USER: ${{ secrets.TF_VAR_CONNECTION_USER }}
-      TF_VAR_CONNECTION_PRIVATE_KEY: ${{ secrets.TF_VAR_CONNECTION_PRIVATE_KEY }}
+      TF_VAR_connection_host: ${{ secrets.TF_VAR_CONNECTION_HOST }}
+      TF_VAR_connection_port: ${{ secrets.TF_VAR_CONNECTION_PORT }}
+      TF_VAR_connection_user: ${{ secrets.TF_VAR_CONNECTION_USER }}
+      TF_VAR_connection_private_key: ${{ secrets.TF_VAR_CONNECTION_PRIVATE_KEY }}
 
     steps:
       - name: Checkout
@@ -39,7 +39,6 @@ jobs:
       - name: Terraform Fmt
         id: fmt
         run: terraform fmt -check -diff -recursive
-        continue-on-error: true
 
       - name: Terraform Init
         id: init
@@ -52,4 +51,3 @@ jobs:
       - name: Terraform Plan
         id: plan
         run: terraform plan -no-color -input=false
-        continue-on-error: true
