@@ -66,6 +66,8 @@ jobs:
   terraform_plan:
     if: github.event_name == 'pull_request'
 
+    needs: tflint
+
     defaults:
       run:
         working-directory: terraform
