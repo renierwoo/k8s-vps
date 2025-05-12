@@ -81,7 +81,7 @@ jobs:
           exit-code: "0"
           severity: "UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL"
           # severity: "HIGH,CRITICAL"
-          scan-ref: "./terraform"
+          scan-ref: "./terraform/"
           skip-setup-trivy: true
 
       - name: Upload Trivy scan results to GitHub Security tab
