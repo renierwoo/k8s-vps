@@ -30,8 +30,8 @@ resource "terraform_data" "update_os_packages" {
 }
 
 
-resource "digitalocean_kubernetes_cluster" "demo" {
-  name   = "demo"
+resource "digitalocean_kubernetes_cluster" "demo1" {
+  name   = "demo1"
   region = "lon1"
   # Grab the latest version slug from `doctl kubernetes options versions`
   version = "1.24.4-do.0"
@@ -56,7 +56,7 @@ locals {
   }
 }
 
-resource "aws_security_group_rule" "example" {
+resource "aws_security_group_rule" "example1" {
   for_each = { for k, v in local.rules : k => v }
 
   type                     = each.value.type
@@ -71,5 +71,5 @@ resource "aws_security_group_rule" "example" {
 module "s3_bucket" {
   source = "terraform-aws-modules/s3-bucket/aws"
 
-  bucket = "my-s3-bucket"
+  bucket = "my-s3-bucket1"
 }
