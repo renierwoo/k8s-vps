@@ -69,7 +69,7 @@ jobs:
         uses: aquasecurity/setup-trivy@v0.2.3
         with:
           cache: true
-          version: v0.62.1
+          version: v0.63.0
 
       - name: Run Trivy vulnerability scanner in repo mode
         uses: aquasecurity/trivy-action@0.31.0
@@ -81,7 +81,7 @@ jobs:
           exit-code: "1"
           severity: "UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL"
           # severity: "HIGH,CRITICAL"
-          scan-ref: "terraform/"
+          scan-ref: "./terraform/"
           skip-setup-trivy: true
 
       - name: Upload Trivy scan results to GitHub Security tab
