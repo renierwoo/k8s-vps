@@ -73,3 +73,40 @@ module "s3_bucket" {
 
   bucket = "my-s3-bucket1"
 }
+
+provider "aws" {
+  region = "us-east-1"
+}
+
+resource "aws_instance" "insecure_ec2" {
+  ami           = "ami-0c55b159cbfafe1f0"  # Amazon Linux 2
+  instance_type = "t2.micro"
+
+  associate_public_ip_address = true
+
+  vpc_security_group_ids = [aws_security_group.allow_all.id]
+
+  tags = {
+    Name = "InsecureInstance"
+  }
+}
+
+resource "aws_security_group" "allow_all" {
+  name        = "allow_all"
+  description = "Allow all inbound traffic"
+  vpc_id      = "vpc-12345678"  # Usa una VPC válida o usa data source
+
+  ingress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
