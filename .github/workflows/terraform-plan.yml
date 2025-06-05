@@ -72,23 +72,29 @@ jobs:
           version: v0.63.0
 
       - name: Run Trivy vulnerability scanner in repo mode
+        id: trivy
         uses: aquasecurity/trivy-action@0.31.0
         with:
           scan-type: "config"
           # hide-progress: true
           format: "sarif"
           output: "trivy-results.sarif"
-          exit-code: "1"
+          exit-code: "0"
           severity: "UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL"
           # severity: "HIGH,CRITICAL"
           scan-ref: "./terraform/"
           skip-setup-trivy: true
-        continue-on-error: true
 
       - name: Upload Trivy scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: "trivy-results.sarif"
+
+      - name: Fail workflow if vulnerabilities were found
+        if: steps.trivy.outputs.exit-code == '1'
+        run: |
+          echo "Trivy detected vulnerabilities."
+          exit 1
 
   terraform_plan:
     if: github.event_name == 'pull_request'
