@@ -79,7 +79,7 @@ jobs:
           # hide-progress: true
           format: "sarif"
           output: "trivy-results.sarif"
-          exit-code: "0"
+          exit-code: "1"
           severity: "UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL"
           # severity: "HIGH,CRITICAL"
           scan-ref: "./terraform/"
