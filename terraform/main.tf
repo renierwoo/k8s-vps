@@ -87,3 +87,19 @@ resource "aws_security_group" "allow_all" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
+
+resource "aws_iam_policy" "overly_permissive_policy" {
+  name        = "OverlyPermissivePolicy"
+  description = "This policy allows all actions on all resources. Very insecure."
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement: [
+      {
+        Effect   = "Allow",
+        Action   = "*",
+        Resource = "*"
+      }
+    ]
+  })
+}
