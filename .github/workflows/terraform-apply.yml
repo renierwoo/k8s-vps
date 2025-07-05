@@ -1,0 +1,40 @@
+name: Execute Terraform Apply
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "terraform/**"
+
+jobs:
+  terraform_apply:
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    defaults:
+      run:
+        working-directory: terraform
+
+    runs-on: ubuntu-latest
+
+    env:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      TF_VAR_connection_host: ${{ secrets.TF_VAR_CONNECTION_HOST }}
+      TF_VAR_connection_port: ${{ secrets.TF_VAR_CONNECTION_PORT }}
+      TF_VAR_connection_user: ${{ secrets.TF_VAR_CONNECTION_USER }}
+      TF_VAR_connection_private_key: ${{ secrets.TF_VAR_CONNECTION_PRIVATE_KEY }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        id: init
+        run: terraform init -input=false
+
+      - name: Terraform Apply
+        id: apply
+        run: terraform apply -input=false -auto-approve
