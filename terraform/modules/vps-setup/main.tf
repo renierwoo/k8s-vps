@@ -59,4 +59,6 @@ resource "terraform_data" "install_required_packages" {
     port        = var.connection_port
     private_key = var.connection_private_key
   }
+
+  depends_on = [ terraform_data.update_os_packages ]
 }
