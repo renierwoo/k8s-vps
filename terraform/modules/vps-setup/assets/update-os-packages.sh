@@ -7,8 +7,6 @@ if ! sudo -n true 2>/dev/null; then
     exit 1
 fi
 
-export DEBIAN_FRONTEND=noninteractive
-
 if command -v apt-get >/dev/null 2>&1; then
     echo "Debian/Ubuntu OS detected."
     echo "Updating OS and system packages..."
