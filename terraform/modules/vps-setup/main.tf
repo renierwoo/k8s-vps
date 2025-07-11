@@ -60,7 +60,7 @@ resource "terraform_data" "install_required_packages" {
     private_key = var.connection_private_key
   }
 
-  depends_on = [ terraform_data.update_os_packages ]
+  depends_on = [terraform_data.update_os_packages]
 }
 
 
@@ -94,7 +94,7 @@ resource "terraform_data" "uninstall_old_package_versions" {
     private_key = var.connection_private_key
   }
 
-  depends_on = [ terraform_data.install_required_packages ]
+  depends_on = [terraform_data.install_required_packages]
 }
 
 
@@ -128,5 +128,5 @@ resource "terraform_data" "setup_container_runtime" {
     private_key = var.connection_private_key
   }
 
-  depends_on = [ terraform_data.uninstall_old_package_versions ]
+  depends_on = [terraform_data.uninstall_old_package_versions]
 }
