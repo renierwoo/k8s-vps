@@ -1,5 +1,7 @@
-terraform {
-  required_providers {}
+provider "aws" {
+  region = var.aws_default_region
 
-  required_version = "~> 1.12"
+#   default_tags {
+#     tags = var.tags
+#   }
 }
