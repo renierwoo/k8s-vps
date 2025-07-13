@@ -4,7 +4,7 @@
 resource "terraform_data" "update_os_packages" {
   # Create a trigger replace with a script change
   triggers_replace = {
-    script_hash = filesha256("${path.module}/assets/update-os-packages.sh")
+    script = file("${path.module}/assets/update-os-packages.sh")
   }
 
   provisioner "file" {
@@ -36,7 +36,7 @@ resource "terraform_data" "update_os_packages" {
 resource "terraform_data" "install_required_packages" {
   # Create a trigger replace with a script change
   triggers_replace = {
-    script_hash = filesha256("${path.module}/assets/install-required-packages.sh")
+    script = file("${path.module}/assets/install-required-packages.sh")
   }
 
   provisioner "file" {
@@ -70,7 +70,7 @@ resource "terraform_data" "install_required_packages" {
 resource "terraform_data" "uninstall_old_package_versions" {
   # Create a trigger replace with a script change
   triggers_replace = {
-    script_hash = filesha256("${path.module}/assets/uninstall-old-package-versions.sh")
+    script = file("${path.module}/assets/uninstall-old-package-versions.sh")
   }
 
   provisioner "file" {
@@ -104,7 +104,7 @@ resource "terraform_data" "uninstall_old_package_versions" {
 resource "terraform_data" "setup_container_runtime" {
   # Create a trigger replace with a script change
   triggers_replace = {
-    script_hash = filesha256("${path.module}/assets/setup-container-runtime.sh")
+    script = file("${path.module}/assets/setup-container-runtime.sh")
   }
 
   provisioner "file" {
@@ -130,4 +130,3 @@ resource "terraform_data" "setup_container_runtime" {
 
   depends_on = [terraform_data.uninstall_old_package_versions]
 }
-

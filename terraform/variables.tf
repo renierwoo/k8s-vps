@@ -1,3 +1,9 @@
+variable "aws_default_region" {
+  description = "The AWS default region to use."
+  type        = string
+  sensitive   = true
+}
+
 variable "connection_user" {
   description = "The user to connect to the remote host."
   type        = string
