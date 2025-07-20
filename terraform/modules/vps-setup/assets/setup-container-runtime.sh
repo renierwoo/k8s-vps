@@ -55,7 +55,7 @@ curl --fail --silent --show-error --location \
     https://github.com/containerd/containerd/releases/download/v$CONTAINERD_VERSION/containerd-$CONTAINERD_VERSION-linux-$ARCHITECTURE.tar.gz \
     --output "$CONTAINERD_TAR"
 
-tar --directory=/usr --extract --gzip --verbose --file="$CONTAINERD_TAR"
+tar --directory=/usr/local --extract --gzip --verbose --file="$CONTAINERD_TAR"
 rm --force "$CONTAINERD_TAR"
 
 # Containerd configuration
@@ -69,15 +69,14 @@ sed --in-place 's/SystemdCgroup = false/SystemdCgroup = true/' /etc/containerd/c
 sed --in-place "s#\(sandbox_image = \"registry.k8s.io/pause:\)[^\"]*\"#\1$SANDBOX_PAUSE_IMAGE_TAG\"#" /etc/containerd/config.toml
 
 # Install containerd systemd service
+mkdir --parents /usr/local/lib/systemd/system
+
 curl --fail --silent --show-error --location \
     https://raw.githubusercontent.com/containerd/containerd/main/containerd.service \
-    --output /usr/lib/systemd/system/containerd.service
+    --output /usr/local/lib/systemd/system/containerd.service
 
 systemctl daemon-reload
 systemctl enable --now containerd
-
-# Restart containerd to apply changes
-# systemctl restart containerd
 
 # Download and install runc
 RUNC_BIN=$(mktemp)
@@ -86,7 +85,7 @@ curl --fail --silent --show-error --location \
     https://github.com/opencontainers/runc/releases/download/v$RUNC_VERSION/runc.$ARCHITECTURE \
     --output "$RUNC_BIN"
 
-install --mode=755 "$RUNC_BIN" /usr/bin/runc
+install --mode=755 "$RUNC_BIN" /usr/local/sbin/runc
 rm --force "$RUNC_BIN"
 
 # Download and install CNI plugins
@@ -107,7 +106,7 @@ curl --fail --silent --show-error --location \
     https://github.com/containerd/nerdctl/releases/download/v$NERDCTL_VERSION/nerdctl-$NERDCTL_VERSION-linux-$ARCHITECTURE.tar.gz \
     --output "$NERDCTL_TAR"
 
-tar --directory=/usr/bin --extract --gzip --verbose --file="$NERDCTL_TAR"
+tar --directory=/usr/local/bin --extract --gzip --verbose --file="$NERDCTL_TAR"
 rm --force "$NERDCTL_TAR"
 
 rm --recursive --force /tmp/* /var/tmp/* /var/cache/apt/* /var/lib/apt/lists/*
