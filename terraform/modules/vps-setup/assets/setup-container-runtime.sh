@@ -66,7 +66,7 @@ containerd config default | tee /etc/containerd/config.toml >/dev/null
 sed --in-place "/\[plugins.'io.containerd.cri.v1.runtime'.containerd.runtimes.runc.options\]/a \ \ \ \ \ \ \ \ \ \ \ \ SystemdCgroup = true" /etc/containerd/config.toml
 
 # Overriding the sandbox (pause) image
-sed --in-place "s#\(sandbox_image = \"registry.k8s.io/pause:\)[^\"]*\"#\1$SANDBOX_PAUSE_IMAGE_TAG\"#" /etc/containerd/config.toml
+sed --in-place "s#\(sandbox = 'registry.k8s.io/pause:\)[^\"]*'#\1$SANDBOX_PAUSE_IMAGE_TAG'#" /etc/containerd/config.toml
 
 # Install containerd systemd service
 mkdir --parents /usr/local/lib/systemd/system
@@ -77,6 +77,7 @@ curl --fail --silent --show-error --location \
 
 systemctl daemon-reload
 systemctl enable --now containerd
+systemctl restart containerd
 
 # Download and install runc
 RUNC_BIN=$(mktemp)

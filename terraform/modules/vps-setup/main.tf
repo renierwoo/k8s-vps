@@ -65,40 +65,6 @@ resource "terraform_data" "install_required_packages" {
 
 
 # -------------------------------------------------------------------------------------------------
-# Uninstall old package versions
-# -------------------------------------------------------------------------------------------------
-# resource "terraform_data" "uninstall_old_package_versions" {
-#   # Create a trigger replace with a script change
-#   triggers_replace = {
-#     script = file("${path.module}/assets/uninstall-old-package-versions.sh")
-#   }
-
-#   provisioner "file" {
-#     source      = "${path.module}/assets/uninstall-old-package-versions.sh"
-#     destination = "/tmp/uninstall-old-package-versions.sh"
-#   }
-
-#   provisioner "remote-exec" {
-#     inline = [
-#       "chmod +x /tmp/uninstall-old-package-versions.sh",
-#       "sudo /tmp/uninstall-old-package-versions.sh",
-#       "sudo rm --force /tmp/uninstall-old-package-versions.sh"
-#     ]
-#   }
-
-#   connection {
-#     type        = var.connection_type
-#     user        = var.connection_user
-#     host        = var.connection_host
-#     port        = var.connection_port
-#     private_key = var.connection_private_key
-#   }
-
-#   depends_on = [terraform_data.install_required_packages]
-# }
-
-
-# -------------------------------------------------------------------------------------------------
 # Setting up container runtime
 # -------------------------------------------------------------------------------------------------
 resource "terraform_data" "setup_container_runtime" {
