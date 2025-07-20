@@ -1,18 +1,25 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 set -o errexit
+set -o nounset
+set -o pipefail
 
+usage() {
+  echo "Usage: $0 <package1> [package2 ... packageN]"
+  exit 1
+}
+
+# Validate input parameters
+if [ "$#" -eq 0 ]; then
+  echo "Error: No packages specified."
+  usage
+fi
+
+# Validate sudo access early
 if ! sudo -n true 2>/dev/null; then
     echo "This script requires sudo privileges. Please run with a user that can use sudo."
     exit 1
 fi
-
-REQUIRED_PACKAGES=(
-    htop
-    git
-    gnupg
-    vim
-)
 
 if command -v apt-get >/dev/null 2>&1; then
     echo "Debian/Ubuntu OS detected."
@@ -22,7 +29,7 @@ if command -v apt-get >/dev/null 2>&1; then
 
     apt-get --quiet=2 --assume-yes update
 
-    for package in "${REQUIRED_PACKAGES[@]}"; do
+    for package in "$@"; do
         if apt-get -o Dpkg::Options::="--force-confold" --quiet=2 --assume-yes --no-install-recommends --no-install-suggests install $package; then
             echo "Package ${package} installed successfully."
         else
@@ -38,6 +45,5 @@ if command -v apt-get >/dev/null 2>&1; then
 
 else
     echo "Unsupported OS detected. Please run this script on a Debian/Ubuntu-based system."
-    echo "No se pudo detectar el gestor de paquetes."
     exit 1
 fi

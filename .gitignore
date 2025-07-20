@@ -38,3 +38,6 @@ terraform.rc
 
 # Ignore any local environment variables files
 .env
+
+# Allow specific tfvars files to be included in version control
+!terraform.tfvars
