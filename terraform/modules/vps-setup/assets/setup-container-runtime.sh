@@ -58,6 +58,16 @@ curl --fail --silent --show-error --location \
 tar --directory=/usr --extract --gzip --verbose --file="$CONTAINERD_TAR"
 rm --force "$CONTAINERD_TAR"
 
+# Containerd configuration
+mkdir --parents /etc/containerd
+containerd config default | tee /etc/containerd/config.toml >/dev/null
+
+# Enable systemd cgroup driver
+sed --in-place 's/SystemdCgroup = false/SystemdCgroup = true/' /etc/containerd/config.toml
+
+# Overriding the sandbox (pause) image
+sed --in-place "s#\(sandbox_image = \"registry.k8s.io/pause:\)[^\"]*\"#\1$SANDBOX_PAUSE_IMAGE_TAG\"#" /etc/containerd/config.toml
+
 # Install containerd systemd service
 curl --fail --silent --show-error --location \
     https://raw.githubusercontent.com/containerd/containerd/main/containerd.service \
@@ -65,6 +75,9 @@ curl --fail --silent --show-error --location \
 
 systemctl daemon-reload
 systemctl enable --now containerd
+
+# Restart containerd to apply changes
+# systemctl restart containerd
 
 # Download and install runc
 RUNC_BIN=$(mktemp)
@@ -87,13 +100,6 @@ mkdir --parents /opt/cni/bin
 tar --directory=/opt/cni/bin --extract --gzip --verbose --file="$CNI_TGZ"
 rm --force "$CNI_TGZ"
 
-# Containerd configuration
-mkdir --parents /etc/containerd
-containerd config default | tee /etc/containerd/config.toml >/dev/null
-
-# Enable systemd cgroup driver
-sed --in-place 's/SystemdCgroup = false/SystemdCgroup = true/' /etc/containerd/config.toml
-
 # Install nerdctl
 NERDCTL_TAR=$(mktemp)
 
@@ -103,11 +109,5 @@ curl --fail --silent --show-error --location \
 
 tar --directory=/usr/bin --extract --gzip --verbose --file="$NERDCTL_TAR"
 rm --force "$NERDCTL_TAR"
-
-# Overriding the sandbox (pause) image
-sed --in-place "s#\(sandbox_image = \"registry.k8s.io/pause:\)[^\"]*\"#\1$SANDBOX_PAUSE_IMAGE_TAG\"#" /etc/containerd/config.toml
-
-# Restart containerd to apply changes
-systemctl restart containerd
 
 rm --recursive --force /tmp/* /var/tmp/* /var/cache/apt/* /var/lib/apt/lists/*
