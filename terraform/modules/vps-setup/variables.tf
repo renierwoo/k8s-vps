@@ -30,3 +30,39 @@ variable "connection_private_key" {
   sensitive   = true
   default     = null
 }
+
+variable "required_packages" {
+  description = "A list of required packages to install on the remote host."
+  type        = list(string)
+  default     = []
+}
+
+variable "containerd_version" {
+  description = "The version of containerd to install."
+  type        = string
+  default     = null
+}
+
+variable "runc_version" {
+  description = "The version of runc to install."
+  type        = string
+  default     = null
+}
+
+variable "cni_plugins_version" {
+  description = "The version of CNI plugins to install."
+  type        = string
+  default     = null
+}
+
+variable "nerdctl_version" {
+  description = "The version of nerdctl to install."
+  type        = string
+  default     = null
+}
+
+variable "sandbox_pause_image_tag" {
+  description = "The tag of the sandbox pause image to use."
+  type        = string
+  default     = null
+}

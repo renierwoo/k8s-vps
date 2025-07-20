@@ -1,7 +1,15 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 set -o errexit
+set -o nounset
+set -o pipefail
 
+usage() {
+    echo "Usage: $0"
+    exit 1
+}
+
+# Validate sudo access early
 if ! sudo -n true 2>/dev/null; then
     echo "This script requires sudo privileges. Please run with a user that can use sudo."
     exit 1
@@ -24,6 +32,5 @@ if command -v apt-get >/dev/null 2>&1; then
 
 else
     echo "Unsupported OS detected. Please run this script on a Debian/Ubuntu-based system."
-    echo "No se pudo detectar el gestor de paquetes."
     exit 1
 fi

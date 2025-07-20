@@ -1,57 +1,113 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 set -o errexit
+set -o nounset
+set -o pipefail
 
-if ! sudo -n true 2>/dev/null; then
-    echo "This script requires sudo privileges. Please run with a user that can use sudo."
+usage() {
+    echo "Usage: $0 <CONTAINERD_VERSION> <RUNC_VERSION> <CNI_PLUGINS_VERSION> <NERDCTL_VERSION> <SANDBOX_PAUSE_IMAGE_TAG>"
+    exit 1
+}
+
+# Validate input parameters
+if [ "$#" -eq 0 ]; then
+  echo "Error: Missing parameters."
+  usage
+fi
+
+# Validate sudo access early
+if ! sudo --non-interactive true 2>/dev/null; then
+    echo "This script requires sudo privileges. Please run as a user with sudo access."
     exit 1
 fi
 
-REQUIRED_PACKAGES=(
-    docker-ce
-    docker-ce-cli
-    containerd.io
-    docker-buildx-plugin
-    docker-compose-plugin
-)
+CONTAINERD_VERSION="$1"
+RUNC_VERSION="$2"
+CNI_PLUGINS_VERSION="$3"
+NERDCTL_VERSION="$4"
+SANDBOX_PAUSE_IMAGE_TAG="$5"
 
-if command -v apt-get >/dev/null 2>&1; then
-    echo "Debian/Ubuntu OS detected."
-    echo "Setting up container runtime..."
+# Detect architecture
+ARCH=$(uname -m)
 
-    export DEBIAN_FRONTEND=noninteractive
-
-    apt-get --quiet=2 --assume-yes update
-    install --mode=0755 --directory /etc/apt/keyrings
-    curl --fail --silent --show-error --location https://download.docker.com/linux/debian/gpg --output /etc/apt/keyrings/docker.asc
-    chmod u+r,g+r,o+r /etc/apt/keyrings/docker.asc
-
-    echo \
-      "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian \
-      $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
-      tee /etc/apt/sources.list.d/docker.list > /dev/null
-
-    apt-get --quiet=2 --assume-yes update
-
-    for package in "${REQUIRED_PACKAGES[@]}"; do
-        if apt-get -o Dpkg::Options::="--force-confold" --quiet=2 --assume-yes --no-install-recommends --no-install-suggests install $package; then
-            echo "Package ${package} installed successfully."
-        else
-            echo "Failed to install package ${package}."
-        fi
-    done
-
-    systemctl enable docker.service
-    systemctl enable containerd.service
-
-    apt-get --quiet=2 --assume-yes autoremove
-    apt-get --quiet=2 --assume-yes autoclean
-    rm --recursive --force /tmp/* /var/tmp/* /var/cache/apt/* /var/lib/apt/lists/*
-
-    echo ""
-
-else
-    echo "Unsupported OS detected. Please run this script on a Debian/Ubuntu-based system."
-    echo "No se pudo detectar el gestor de paquetes."
+if [ -z "$ARCH" ]; then
+    echo "Error: Unable to detect architecture."
     exit 1
 fi
+
+case "$ARCH" in
+    x86_64)
+        ARCHITECTURE="amd64"
+        ;;
+    aarch64|arm64)
+        ARCHITECTURE="arm64"
+        ;;
+    *)
+        echo "Unsupported architecture: $ARCH. Only x86_64 and arm64 are supported."
+        exit 1
+        ;;
+esac
+
+# Download and install containerd
+CONTAINERD_TAR=$(mktemp)
+
+curl --fail --silent --show-error --location \
+    https://github.com/containerd/containerd/releases/download/v$CONTAINERD_VERSION/containerd-$CONTAINERD_VERSION-linux-$ARCHITECTURE.tar.gz \
+    --output "$CONTAINERD_TAR"
+
+tar --directory=/usr --extract --gzip --verbose --file="$CONTAINERD_TAR"
+rm --force "$CONTAINERD_TAR"
+
+# Install containerd systemd service
+curl --fail --silent --show-error --location \
+    https://raw.githubusercontent.com/containerd/containerd/main/containerd.service \
+    --output /usr/lib/systemd/system/containerd.service
+
+systemctl daemon-reload
+systemctl enable --now containerd
+
+# Download and install runc
+RUNC_BIN=$(mktemp)
+
+curl --fail --silent --show-error --location \
+    https://github.com/opencontainers/runc/releases/download/v$RUNC_VERSION/runc.$ARCHITECTURE \
+    --output "$RUNC_BIN"
+
+install --mode=755 "$RUNC_BIN" /usr/bin/runc
+rm --force "$RUNC_BIN"
+
+# Download and install CNI plugins
+CNI_TGZ=$(mktemp)
+
+curl --fail --silent --show-error --location \
+    https://github.com/containernetworking/plugins/releases/download/v$CNI_PLUGINS_VERSION/cni-plugins-linux-$ARCHITECTURE-v$CNI_PLUGINS_VERSION.tgz \
+    --output "$CNI_TGZ"
+
+mkdir --parents /opt/cni/bin
+tar --directory=/opt/cni/bin --extract --gzip --verbose --file="$CNI_TGZ"
+rm --force "$CNI_TGZ"
+
+# Containerd configuration
+mkdir --parents /etc/containerd
+containerd config default | tee /etc/containerd/config.toml >/dev/null
+
+# Enable systemd cgroup driver
+sed --in-place 's/SystemdCgroup = false/SystemdCgroup = true/' /etc/containerd/config.toml
+
+# Install nerdctl
+NERDCTL_TAR=$(mktemp)
+
+curl --fail --silent --show-error --location \
+    https://github.com/containerd/nerdctl/releases/download/v$NERDCTL_VERSION/nerdctl-$NERDCTL_VERSION-linux-$ARCHITECTURE.tar.gz \
+    --output "$NERDCTL_TAR"
+
+tar --directory=/usr/bin --extract --gzip --verbose --file="$NERDCTL_TAR"
+rm --force "$NERDCTL_TAR"
+
+# Overriding the sandbox (pause) image
+sed --in-place "s#\(sandbox_image = \"registry.k8s.io/pause:\)[^\"]*\"#\1$SANDBOX_PAUSE_IMAGE_TAG\"#" /etc/containerd/config.toml
+
+# Restart containerd to apply changes
+systemctl restart containerd
+
+rm --recursive --force /tmp/* /var/tmp/* /var/cache/apt/* /var/lib/apt/lists/*
