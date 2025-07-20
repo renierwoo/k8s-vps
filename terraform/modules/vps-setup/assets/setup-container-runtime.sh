@@ -63,7 +63,7 @@ mkdir --parents /etc/containerd
 containerd config default | tee /etc/containerd/config.toml >/dev/null
 
 # Enable systemd cgroup driver
-sed --in-place 's/SystemdCgroup = false/SystemdCgroup = true/' /etc/containerd/config.toml
+sed --in-place "/\[plugins.'io.containerd.cri.v1.runtime'.containerd.runtimes.runc.options\]/a \ \ \ \ \ \ \ \ \ \ \ \ SystemdCgroup = true" /etc/containerd/config.toml
 
 # Overriding the sandbox (pause) image
 sed --in-place "s#\(sandbox_image = \"registry.k8s.io/pause:\)[^\"]*\"#\1$SANDBOX_PAUSE_IMAGE_TAG\"#" /etc/containerd/config.toml
