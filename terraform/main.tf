@@ -1,12 +1,12 @@
 module "vps_setup" {
   source = "./modules/vps-setup"
 
-  connection_user         = var.connection_user
-  connection_host         = var.connection_host
-  connection_port         = var.connection_port
-  connection_private_key  = var.connection_private_key
+  connection_user        = var.connection_user
+  connection_host        = var.connection_host
+  connection_port        = var.connection_port
+  connection_private_key = var.connection_private_key
 
-  required_packages       = var.required_packages
+  required_packages = var.required_packages
 
   containerd_version      = var.containerd_version
   runc_version            = var.runc_version
