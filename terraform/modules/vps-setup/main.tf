@@ -97,3 +97,37 @@ resource "terraform_data" "setup_container_runtime" {
   # depends_on = [terraform_data.uninstall_old_package_versions]
   depends_on = [terraform_data.install_required_packages]
 }
+
+
+# -------------------------------------------------------------------------------------------------
+# Enable IPv4 packet forwarding
+# -------------------------------------------------------------------------------------------------
+resource "terraform_data" "enable_ipv4_packet_forwarding" {
+  # Create a trigger replace with a script change
+  triggers_replace = {
+    script = file("${path.module}/assets/enable-ipv4-packet-forwarding.sh")
+  }
+
+  provisioner "file" {
+    source      = "${path.module}/assets/enable-ipv4-packet-forwarding.sh"
+    destination = "/tmp/enable-ipv4-packet-forwarding.sh"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "chmod +x /tmp/enable-ipv4-packet-forwarding.sh",
+      "sudo /tmp/enable-ipv4-packet-forwarding.sh",
+      "sudo rm --force /tmp/enable-ipv4-packet-forwarding.sh"
+    ]
+  }
+
+  connection {
+    type        = var.connection_type
+    user        = var.connection_user
+    host        = var.connection_host
+    port        = var.connection_port
+    private_key = var.connection_private_key
+  }
+
+  depends_on = [terraform_data.setup_container_runtime]
+}
