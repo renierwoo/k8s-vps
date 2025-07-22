@@ -131,3 +131,37 @@ resource "terraform_data" "enable_ipv4_packet_forwarding" {
 
   depends_on = [terraform_data.setup_container_runtime]
 }
+
+
+# -------------------------------------------------------------------------------------------------
+# Setting up firewall
+# -------------------------------------------------------------------------------------------------
+resource "terraform_data" "setup_firewall" {
+  # Create a trigger replace with a script change
+  triggers_replace = {
+    script = file("${path.module}/assets/setup-firewall.sh")
+  }
+
+  provisioner "file" {
+    source      = "${path.module}/assets/setup-firewall.sh"
+    destination = "/tmp/setup-firewall.sh"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "chmod +x /tmp/setup-firewall.sh",
+      "sudo /tmp/setup-firewall.sh ${var.connection_port}",
+      "sudo rm --force /tmp/setup-firewall.sh"
+    ]
+  }
+
+  connection {
+    type        = var.connection_type
+    user        = var.connection_user
+    host        = var.connection_host
+    port        = var.connection_port
+    private_key = var.connection_private_key
+  }
+
+  depends_on = [terraform_data.enable_ipv4_packet_forwarding]
+}
