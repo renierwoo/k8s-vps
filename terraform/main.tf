@@ -28,3 +28,17 @@ module "kubeadm_setup" {
 
   depends_on = [module.vps_setup]
 }
+
+
+module "k8s_init" {
+  source = "./modules/k8s-init"
+
+  connection_user        = var.connection_user
+  connection_host        = var.connection_host
+  connection_port        = var.connection_port
+  connection_private_key = var.connection_private_key
+
+  pod_network_cidr = var.pod_network_cidr
+
+  depends_on = [module.kubeadm_setup]
+}
