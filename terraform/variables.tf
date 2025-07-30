@@ -61,3 +61,8 @@ variable "kubernetes_version" {
   description = "The version of Kubernetes to install."
   type        = string
 }
+
+variable "pod_network_cidr" {
+  description = "The CIDR for the pod network."
+  type        = string
+}

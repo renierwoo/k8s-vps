@@ -12,3 +12,4 @@ nerdctl_version         = "2.1.3"
 sandbox_pause_image_tag = "3.10.1"
 
 kubernetes_version = "1.33"
+pod_network_cidr   = "10.244.0.0/16"
