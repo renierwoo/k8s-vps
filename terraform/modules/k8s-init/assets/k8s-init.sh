@@ -31,4 +31,4 @@ cp --force /etc/kubernetes/admin.conf $HOME/.kube/config
 
 chown $(id --user):$(id --group) $HOME/.kube/config
 
-echo "Kubernetes initialized successfully."
+echo "Kubernetes initialized successfully. You can now set up your pod network."
