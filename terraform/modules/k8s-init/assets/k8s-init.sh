@@ -23,7 +23,7 @@ fi
 
 POD_NETWORK_CIDR="$1"
 
-kubeadm init --pod-network-cidr="$POD_NETWORK_CIDR"
+kubeadm init --pod-network-cidr="$POD_NETWORK_CIDR" > /dev/null 2>&1
 
 mkdir --parents $HOME/.kube
 
