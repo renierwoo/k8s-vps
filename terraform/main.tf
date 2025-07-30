@@ -14,3 +14,17 @@ module "vps_setup" {
   nerdctl_version         = var.nerdctl_version
   sandbox_pause_image_tag = var.sandbox_pause_image_tag
 }
+
+
+module "kubeadm_setup" {
+  source = "./modules/kubeadm-setup"
+
+  connection_user        = var.connection_user
+  connection_host        = var.connection_host
+  connection_port        = var.connection_port
+  connection_private_key = var.connection_private_key
+
+  kubernetes_version = var.kubernetes_version
+
+  depends_on = [module.vps_setup]
+}

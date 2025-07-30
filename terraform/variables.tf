@@ -56,3 +56,8 @@ variable "sandbox_pause_image_tag" {
   description = "The tag of the sandbox pause image to use."
   type        = string
 }
+
+variable "kubernetes_version" {
+  description = "The version of Kubernetes to install."
+  type        = string
+}
