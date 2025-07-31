@@ -61,7 +61,7 @@ echo "Cilium CLI version $CILIUM_CLI_VERSION installed successfully."
 
 echo "Installing Cilium version $CILIUM_VERSION..."
 
-cilium install --version $CILIUM_VERSION --config cluster-pool-ipv4-cidr=$POD_NETWORK_CIDR
+cilium install --version $CILIUM_VERSION --set ipam.operator.clusterPoolIPv4PodCIDRList=$POD_NETWORK_CIDR
 
 echo "Cilium version $CILIUM_VERSION installed successfully."
 
