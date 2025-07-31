@@ -52,7 +52,8 @@ module "cilium_setup" {
   connection_port        = var.connection_port
   connection_private_key = var.connection_private_key
 
-  cilium_version = var.cilium_version
+  cilium_cli_version = var.cilium_cli_version
+  cilium_version     = var.cilium_version
 
   depends_on = [module.k8s_init]
 }

@@ -67,6 +67,11 @@ variable "pod_network_cidr" {
   type        = string
 }
 
+variable "cilium_cli_version" {
+  description = "The version of Cilium CLI to install."
+  type        = string
+}
+
 variable "cilium_version" {
   description = "The version of Cilium to install."
   type        = string

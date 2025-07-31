@@ -12,7 +12,7 @@ resource "terraform_data" "cilium_setup" {
   provisioner "remote-exec" {
     inline = [
       "chmod +x /tmp/cilium-setup.sh",
-      "sudo /tmp/cilium-setup.sh ${var.cilium_version}",
+      "sudo /tmp/cilium-setup.sh ${var.cilium_cli_version} ${var.cilium_version}",
       "sudo rm --force /tmp/cilium-setup.sh"
     ]
   }
