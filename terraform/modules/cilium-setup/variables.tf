@@ -54,3 +54,9 @@ variable "pod_network_cidr" {
   type        = string
   default     = "10.244.0.0/16"
 }
+
+variable "enable_hubble" {
+  description = "Enable Hubble for Cilium. Default is false."
+  type        = bool
+  default     = false
+}

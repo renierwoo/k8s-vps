@@ -25,3 +25,34 @@ resource "terraform_data" "cilium_setup" {
     private_key = var.connection_private_key
   }
 }
+
+
+resource "terraform_data" "hubble_setup" {
+  count = var.enable_hubble ? 1 : 0
+
+  # Create a trigger replace with a script change
+  triggers_replace = {
+    script = file("${path.module}/assets/hubble-setup.sh")
+  }
+
+  provisioner "file" {
+    source      = "${path.module}/assets/hubble-setup.sh"
+    destination = "/tmp/hubble-setup.sh"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "chmod +x /tmp/hubble-setup.sh",
+      "sudo /tmp/hubble-setup.sh",
+      "sudo rm --force /tmp/hubble-setup.sh"
+    ]
+  }
+
+  connection {
+    type        = var.connection_type
+    user        = var.connection_user
+    host        = var.connection_host
+    port        = var.connection_port
+    private_key = var.connection_private_key
+  }
+}

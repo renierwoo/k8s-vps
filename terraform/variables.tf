@@ -81,3 +81,8 @@ variable "ipam_mode" {
   description = "The IPAM mode to use. Options are 'cluster-pool' or 'kubernetes'."
   type        = string
 }
+
+variable "enable_hubble" {
+  description = "Enable Hubble for Cilium. Default is false."
+  type        = bool
+}
