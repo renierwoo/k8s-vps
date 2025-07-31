@@ -5,7 +5,7 @@ set -o nounset
 set -o pipefail
 
 usage() {
-    echo "Usage: $0 <CILIUM_CLI_VERSION> <CILIUM_VERSION> <POD_NETWORK_CIDR>"
+    echo "Usage: $0 <CILIUM_CLI_VERSION> <CILIUM_VERSION> <IPAM_MODE> <POD_NETWORK_CIDR>"
     exit 1
 }
 
@@ -23,7 +23,8 @@ fi
 
 CILIUM_CLI_VERSION="$1"
 CILIUM_VERSION="$2"
-POD_NETWORK_CIDR="$3"
+IPAM_MODE="$3"
+POD_NETWORK_CIDR="$4"
 
 # Detect architecture
 ARCH=$(uname -m)
@@ -61,7 +62,16 @@ echo "Cilium CLI version $CILIUM_CLI_VERSION installed successfully."
 
 echo "Installing Cilium version $CILIUM_VERSION..."
 
-cilium install --version $CILIUM_VERSION --set ipam.operator.clusterPoolIPv4PodCIDRList=$POD_NETWORK_CIDR
+if [[ "$IPAM_MODE" == "cluster-pool" ]]; then
+    echo "Using IPAM cluster-pool"
+    cilium install --version $CILIUM_VERSION --set ipam.operator.clusterPoolIPv4PodCIDRList=$POD_NETWORK_CIDR
+elif [[ "$IPAM_MODE" == "kubernetes" ]]; then
+    echo "Using IPAM kubernetes"
+    cilium install --version $CILIUM_VERSION --set ipam.mode=kubernetes --set k8s.requireIPv4PodCIDR=true
+else
+    echo "Unrecognized IPAM mode: $IPAM_MODE"
+    exit 1
+fi
 
 echo "Cilium version $CILIUM_VERSION installed successfully."
 
