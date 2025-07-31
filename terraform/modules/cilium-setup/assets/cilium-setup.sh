@@ -63,3 +63,9 @@ echo "Installing Cilium version $CILIUM_VERSION..."
 cilium install --version $CILIUM_VERSION
 
 echo "Cilium version $CILIUM_VERSION installed successfully."
+
+echo "Removing control-plane node taint..."
+
+kubectl taint nodes $(kubectl get nodes --output='name') node-role.kubernetes.io/control-plane:NoSchedule-
+
+echo "Control-plane node taint removed successfully."
