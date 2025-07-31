@@ -66,3 +66,8 @@ variable "pod_network_cidr" {
   description = "The CIDR for the pod network."
   type        = string
 }
+
+variable "cilium_version" {
+  description = "The version of Cilium to install."
+  type        = string
+}

@@ -42,3 +42,17 @@ module "k8s_init" {
 
   depends_on = [module.kubeadm_setup]
 }
+
+
+module "cilium_setup" {
+  source = "./modules/cilium-setup"
+
+  connection_user        = var.connection_user
+  connection_host        = var.connection_host
+  connection_port        = var.connection_port
+  connection_private_key = var.connection_private_key
+
+  cilium_version = var.cilium_version
+
+  depends_on = [module.k8s_init]
+}
