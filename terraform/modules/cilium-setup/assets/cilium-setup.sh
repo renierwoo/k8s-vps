@@ -5,7 +5,7 @@ set -o nounset
 set -o pipefail
 
 usage() {
-    echo "Usage: $0 <CILIUM_CLI_VERSION> <CILIUM_VERSION>"
+    echo "Usage: $0 <CILIUM_CLI_VERSION> <CILIUM_VERSION> <POD_NETWORK_CIDR>"
     exit 1
 }
 
@@ -23,6 +23,7 @@ fi
 
 CILIUM_CLI_VERSION="$1"
 CILIUM_VERSION="$2"
+POD_NETWORK_CIDR="$3"
 
 # Detect architecture
 ARCH=$(uname -m)
@@ -60,7 +61,7 @@ echo "Cilium CLI version $CILIUM_CLI_VERSION installed successfully."
 
 echo "Installing Cilium version $CILIUM_VERSION..."
 
-cilium install --version $CILIUM_VERSION
+cilium install --version $CILIUM_VERSION --config cluster-pool-ipv4-cidr=$POD_NETWORK_CIDR
 
 echo "Cilium version $CILIUM_VERSION installed successfully."
 

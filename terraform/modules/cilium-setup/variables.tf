@@ -42,3 +42,9 @@ variable "cilium_version" {
   type        = string
   default     = "0.18.5"
 }
+
+variable "pod_network_cidr" {
+  description = "The CIDR for the pod network."
+  type        = string
+  default     = "10.244.0.0/16"
+}
