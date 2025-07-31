@@ -56,6 +56,7 @@ module "cilium_setup" {
   cilium_version     = var.cilium_version
   ipam_mode          = var.ipam_mode
   pod_network_cidr   = var.pod_network_cidr
+  enable_hubble      = var.enable_hubble
 
   depends_on = [module.k8s_init]
 }
