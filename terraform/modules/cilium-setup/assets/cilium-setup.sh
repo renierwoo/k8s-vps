@@ -5,13 +5,13 @@ set -o nounset
 set -o pipefail
 
 usage() {
-    echo "Usage: $0 <CILIUM_VERSION>"
+    echo "Usage: $0 <CILIUM_CLI_VERSION> <CILIUM_VERSION>"
     exit 1
 }
 
 # Validate input parameters
 if [ "$#" -eq 0 ]; then
-  echo "Error: No Cilium CLI version specified."
+  echo "Error: No arguments provided."
   usage
 fi
 
@@ -21,7 +21,8 @@ if ! sudo -n true 2>/dev/null; then
     exit 1
 fi
 
-CILIUM_VERSION="$1"
+CILIUM_CLI_VERSION="$1"
+CILIUM_VERSION="$2"
 
 # Detect architecture
 ARCH=$(uname -m)
@@ -44,10 +45,10 @@ case "$ARCH" in
         ;;
 esac
 
-echo "Installing Cilium CLI version $CILIUM_VERSION for architecture $ARCHITECTURE..."
+echo "Installing Cilium CLI version $CILIUM_CLI_VERSION for architecture $ARCHITECTURE..."
 
 curl --location --fail --remote-name-all \
-    https://github.com/cilium/cilium-cli/releases/download/v$CILIUM_VERSION/cilium-linux-$ARCHITECTURE.tar.gz{,.sha256sum}
+    https://github.com/cilium/cilium-cli/releases/download/v$CILIUM_CLI_VERSION/cilium-linux-$ARCHITECTURE.tar.gz{,.sha256sum}
 
 sha256sum --check cilium-linux-$ARCHITECTURE.tar.gz.sha256sum
 
@@ -55,7 +56,7 @@ tar --extract --gzip --verbose --file=cilium-linux-$ARCHITECTURE.tar.gz --direct
 
 rm --force cilium-linux-$ARCHITECTURE.tar.gz{,.sha256sum}
 
-echo "Cilium CLI version $CILIUM_VERSION installed successfully."
+echo "Cilium CLI version $CILIUM_CLI_VERSION installed successfully."
 
 echo "Installing Cilium version $CILIUM_VERSION..."
 

@@ -31,6 +31,12 @@ variable "connection_private_key" {
   default     = null
 }
 
+variable "cilium_cli_version" {
+  description = "The version of Cilium CLI to install."
+  type        = string
+  default     = "0.18.5"
+}
+
 variable "cilium_version" {
   description = "The version of Cilium to install."
   type        = string

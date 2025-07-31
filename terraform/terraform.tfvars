@@ -13,4 +13,5 @@ sandbox_pause_image_tag = "3.10.1"
 
 kubernetes_version = "1.33"
 pod_network_cidr   = "10.244.0.0/16"
-cilium_version     = "0.18.5"
+cilium_cli_version = "0.18.5"
+cilium_version     = "1.18.0"
