@@ -43,6 +43,12 @@ variable "cilium_version" {
   default     = "0.18.5"
 }
 
+variable "ipam_mode" {
+  description = "The IPAM mode to use. Options are 'cluster-pool' or 'kubernetes'."
+  type        = string
+  default     = "cluster-pool"
+}
+
 variable "pod_network_cidr" {
   description = "The CIDR for the pod network."
   type        = string

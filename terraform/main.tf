@@ -54,6 +54,7 @@ module "cilium_setup" {
 
   cilium_cli_version = var.cilium_cli_version
   cilium_version     = var.cilium_version
+  ipam_mode          = var.ipam_mode
   pod_network_cidr   = var.pod_network_cidr
 
   depends_on = [module.k8s_init]

@@ -76,3 +76,8 @@ variable "cilium_version" {
   description = "The version of Cilium to install."
   type        = string
 }
+
+variable "ipam_mode" {
+  description = "The IPAM mode to use. Options are 'cluster-pool' or 'kubernetes'."
+  type        = string
+}
