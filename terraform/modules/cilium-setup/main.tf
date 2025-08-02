@@ -43,7 +43,7 @@ resource "terraform_data" "hubble_setup" {
   provisioner "remote-exec" {
     inline = [
       "chmod +x /tmp/hubble-setup.sh",
-      "sudo /tmp/hubble-setup.sh",
+      "sudo /tmp/hubble-setup.sh ${var.hubble_cli_version}",
       "sudo rm --force /tmp/hubble-setup.sh"
     ]
   }
