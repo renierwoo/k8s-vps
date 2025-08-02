@@ -96,3 +96,8 @@ variable "hubble_enabled_ui" {
   description = "Enable Hubble UI for Cilium. Default is false."
   type        = bool
 }
+
+variable "metal_lb_chart_version" {
+  description = "The version of the MetalLB Helm chart to install."
+  type        = string
+}

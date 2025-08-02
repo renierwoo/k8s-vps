@@ -72,5 +72,7 @@ module "metal_lb_setup" {
   connection_port        = var.connection_port
   connection_private_key = var.connection_private_key
 
+  metal_lb_chart_version = var.metal_lb_chart_version
+
   depends_on = [module.cilium_setup]
 }

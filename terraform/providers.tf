@@ -5,3 +5,9 @@ provider "aws" {
   #     tags = var.tags
   #   }
 }
+
+provider "helm" {
+  kubernetes = {
+    config_path = "~/.kube/config"
+  }
+}

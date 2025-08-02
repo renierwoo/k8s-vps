@@ -30,3 +30,9 @@ variable "connection_private_key" {
   sensitive   = true
   default     = null
 }
+
+variable "metal_lb_chart_version" {
+  description = "The version of the MetalLB Helm chart to install."
+  type        = string
+  default     = "0.15.2"
+}

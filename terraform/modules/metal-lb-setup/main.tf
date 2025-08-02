@@ -25,3 +25,47 @@ resource "terraform_data" "preparation" {
     private_key = var.connection_private_key
   }
 }
+
+
+resource "kubernetes_namespace" "metal_lb" {
+  metadata {
+    annotations = {
+      name = "metallb-system"
+    }
+
+    labels = {
+      "app.kubernetes.io/name"       = "metallb"
+      "app.kubernetes.io/instance"   = "metallb"
+      "app.kubernetes.io/version"    = var.metal_lb_chart_version
+      "app.kubernetes.io/component"  = "controller"
+      "app.kubernetes.io/part-of"    = "metallb"
+      "app.kubernetes.io/managed-by" = "terraform"
+
+      "pod-security.kubernetes.io/enforce" = "privileged"
+      "pod-security.kubernetes.io/audit"   = "privileged"
+      "pod-security.kubernetes.io/warn"    = "privileged"
+    }
+
+    name = "metallb-system"
+  }
+
+  depends_on = [terraform_data.preparation]
+}
+
+
+resource "helm_release" "metal_lb_setup" {
+  chart = "metallb"
+  name  = "metallb"
+
+  description = "MetalLB is a load-balancer implementation for bare metal Kubernetes clusters."
+  namespace   = kubernetes_namespace.metal_lb.metadata[0].name
+  repository  = "https://metallb.github.io/metallb"
+  version     = var.metal_lb_chart_version
+
+  # set {
+  #   name  = "test"
+  #   value = var.test_value
+  # }
+
+  depends_on = [kubernetes_namespace.metal_lb]
+}
