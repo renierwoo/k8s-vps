@@ -53,6 +53,9 @@ ufw allow 30000:32767/tcp
 # Rule to allow NodePort Services connections
 ufw allow 30000:32767/udp
 
+# Rule to allow Hubble connections
+ufw allow 4244/tcp
+
 # Rule to allow Calico networking (BGP) connections
 # ufw allow 179/tcp
 
