@@ -18,3 +18,4 @@ cilium_version     = "1.18.0"
 ipam_mode          = "kubernetes"
 enable_hubble      = true
 hubble_cli_version = "1.17.5"
+hubble_enabled_ui  = true
