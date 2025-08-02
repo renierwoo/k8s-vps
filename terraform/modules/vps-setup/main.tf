@@ -36,7 +36,8 @@ resource "terraform_data" "update_os_packages" {
 resource "terraform_data" "install_required_packages" {
   # Create a trigger replace with a script change
   triggers_replace = {
-    script = file("${path.module}/assets/install-required-packages.sh")
+    script            = file("${path.module}/assets/install-required-packages.sh")
+    required_packages = join(" ", var.required_packages)
   }
 
   provisioner "file" {
