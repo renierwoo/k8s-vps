@@ -2,6 +2,7 @@ required_packages = [
   "htop",
   "git",
   "gnupg",
+  "net-tools",
   "vim"
 ]
 
