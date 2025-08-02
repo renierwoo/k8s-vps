@@ -86,3 +86,8 @@ variable "enable_hubble" {
   description = "Enable Hubble for Cilium. Default is false."
   type        = bool
 }
+
+variable "hubble_cli_version" {
+  description = "The version of Hubble CLI to install."
+  type        = string
+}

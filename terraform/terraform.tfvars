@@ -17,3 +17,4 @@ cilium_cli_version = "0.18.5"
 cilium_version     = "1.18.0"
 ipam_mode          = "kubernetes"
 enable_hubble      = true
+hubble_cli_version = "1.17.5"

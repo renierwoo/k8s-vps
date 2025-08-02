@@ -60,3 +60,9 @@ variable "enable_hubble" {
   type        = bool
   default     = false
 }
+
+variable "hubble_cli_version" {
+  description = "The version of Hubble CLI to install."
+  type        = string
+  default     = "1.17.5"
+}
