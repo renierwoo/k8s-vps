@@ -66,3 +66,9 @@ variable "hubble_cli_version" {
   type        = string
   default     = "1.17.5"
 }
+
+variable "hubble_enabled_ui" {
+  description = "Enable Hubble UI for Cilium. Default is false."
+  type        = bool
+  default     = false
+}

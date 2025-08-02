@@ -5,7 +5,7 @@ set -o nounset
 set -o pipefail
 
 usage() {
-    echo "Usage: $0 <HUBBLE_CLI_VERSION>"
+    echo "Usage: $0 <HUBBLE_CLI_VERSION> <ENABLE_HUBBLE_UI>"
     exit 1
 }
 
@@ -22,6 +22,7 @@ if ! sudo -n true 2>/dev/null; then
 fi
 
 HUBBLE_CLI_VERSION="$1"
+ENABLE_HUBBLE_UI="$2"
 
 # Detect architecture
 ARCH=$(uname -m)
@@ -57,8 +58,12 @@ rm --force hubble-linux-$ARCHITECTURE.tar.gz{,.sha256sum}
 
 echo "Hubble CLI version $HUBBLE_CLI_VERSION installed successfully."
 
-echo "Installing Hubble..."
-
-cilium hubble enable
+if [ "$ENABLE_HUBBLE_UI" = "true" ]; then
+    echo "Installing Hubble with UI..."
+    cilium hubble enable --ui
+else
+    echo "Installing Hubble without UI..."
+    cilium hubble enable
+fi
 
 echo "Hubble installed successfully."
