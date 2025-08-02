@@ -20,3 +20,5 @@ ipam_mode          = "kubernetes"
 enable_hubble      = true
 hubble_cli_version = "1.17.5"
 hubble_enabled_ui  = true
+
+metal_lb_chart_version = "0.15.2"

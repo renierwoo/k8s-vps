@@ -33,6 +33,12 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
+      - name: Set up Kubeconfig
+        run: |
+          mkdir --parents ~/.kube
+          echo "${{ secrets.KUBECONFIG_CONTENT }}" > ~/.kube/config
+          chmod 600 ~/.kube/config
+
       - name: Terraform Init
         id: init
         run: |
