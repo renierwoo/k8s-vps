@@ -62,3 +62,15 @@ module "cilium_setup" {
 
   depends_on = [module.k8s_init]
 }
+
+
+module "metal_lb_setup" {
+  source = "./modules/metal-lb-setup"
+
+  connection_user        = var.connection_user
+  connection_host        = var.connection_host
+  connection_port        = var.connection_port
+  connection_private_key = var.connection_private_key
+
+  depends_on = [module.cilium_setup]
+}
