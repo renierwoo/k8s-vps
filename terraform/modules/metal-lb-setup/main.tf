@@ -100,7 +100,7 @@ resource "kubernetes_manifest" "l2_advertisement" {
 
     "spec" = {
       "ipAddressPools" = [
-        kubernetes_manifest.ip_address_pool.manifest[0].metadata[0].name
+        kubernetes_manifest.ip_address_pool.manifest.metadata.name
       ]
     }
   }
