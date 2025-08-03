@@ -62,10 +62,46 @@ resource "helm_release" "metal_lb_setup" {
   repository  = "https://metallb.github.io/metallb"
   version     = var.metal_lb_chart_version
 
-  # set {
-  #   name  = "test"
-  #   value = var.test_value
-  # }
-
   depends_on = [kubernetes_namespace.metal_lb]
+}
+
+
+resource "kubernetes_manifest" "ip_address_pool" {
+  manifest = {
+    "apiVersion" = "metallb.io/v1beta1"
+    "kind"       = "IPAddressPool"
+
+    "metadata" = {
+      "name"      = "metal-lb-pool"
+      "namespace" = kubernetes_namespace.metal_lb.metadata[0].name
+    }
+
+    "spec" = {
+      "addresses" = [
+        "${var.connection_host}/32"
+      ]
+
+      "autoAssign"    = true
+      "avoidBuggyIPs" = true
+    }
+  }
+}
+
+
+resource "kubernetes_manifest" "l2_advertisement" {
+  manifest = {
+    "apiVersion" = "metallb.io/v1beta1"
+    "kind"       = "L2Advertisement"
+
+    "metadata" = {
+      "name"      = "metal-lb-advertisement"
+      "namespace" = kubernetes_namespace.metal_lb.metadata[0].name
+    }
+
+    "spec" = {
+      "ipAddressPools" = [
+        kubernetes_manifest.ip_address_pool.manifest.metadata.name
+      ]
+    }
+  }
 }
