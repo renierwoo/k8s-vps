@@ -160,7 +160,7 @@ resource "kubernetes_ingress_v1" "hubble_ui" {
         var.hubble_ui_domain
       ]
 
-      secret_name = kubernetes_secret_v1.hubble_ui_tls.name
+      secret_name = kubernetes_secret_v1.hubble_ui_tls.metadata[0].name
     }
   }
 }
