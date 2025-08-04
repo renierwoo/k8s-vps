@@ -1,5 +1,6 @@
 required_packages = [
   "htop",
+  "fail2ban",
   "git",
   "gnupg",
   "net-tools",
