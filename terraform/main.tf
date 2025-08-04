@@ -94,3 +94,12 @@ module "ingress_nginx_controller" {
 
   depends_on = [module.metal_lb_setup]
 }
+
+
+# module "oauth2_proxy" {
+#   source = "./modules/oauth2-proxy"
+
+#   oauth2_proxy_chart_version = var.oauth2_proxy_chart_version
+
+#   depends_on = [module.ingress_nginx_controller]
+# }
