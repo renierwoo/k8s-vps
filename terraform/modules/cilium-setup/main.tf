@@ -77,7 +77,7 @@ resource "kubernetes_secret_v1" "hubble_ui_basic_auth" {
   }
 
   data = {
-    auth = base64encode("${var.hubble_ui_username}:${var.hubble_ui_password}")
+    auth = "${var.hubble_ui_username}:${var.hubble_ui_password}"
   }
 
   type = "Opaque"
@@ -103,8 +103,8 @@ resource "kubernetes_secret_v1" "hubble_ui_tls" {
   }
 
   data = {
-    "tls.crt" = base64encode(var.main_domain_tls_cert)
-    "tls.key" = base64encode(var.main_domain_tls_key)
+    "tls.crt" = var.main_domain_tls_cert
+    "tls.key" = var.main_domain_tls_key
   }
 
   type = "Opaque"
