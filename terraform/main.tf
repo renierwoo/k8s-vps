@@ -76,3 +76,14 @@ module "metal_lb_setup" {
 
   depends_on = [module.cilium_setup]
 }
+
+
+module "ingress_nginx_controller" {
+  source = "./modules/ingress-nginx-controller"
+
+  ingress_nginx_controller_chart_version           = var.ingress_nginx_controller_chart_version
+  ingress_nginx_controller_kind                    = var.ingress_nginx_controller_kind
+  ingress_nginx_controller_external_traffic_policy = var.ingress_nginx_controller_external_traffic_policy
+
+  depends_on = [module.metal_lb_setup]
+}
