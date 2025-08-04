@@ -97,6 +97,36 @@ variable "hubble_enabled_ui" {
   type        = bool
 }
 
+variable "hubble_ui_username" {
+  description = "Username for Hubble UI."
+  type        = string
+  sensitive   = true
+}
+
+variable "hubble_ui_password" {
+  description = "Password for Hubble UI."
+  type        = string
+  sensitive   = true
+}
+
+variable "hubble_ui_domain" {
+  description = "The domain for the Hubble UI."
+  type        = string
+  sensitive   = true
+}
+
+variable "main_domain_tls_cert" {
+  description = "The TLS certificate for the main domain."
+  type        = string
+  sensitive   = true
+}
+
+variable "main_domain_tls_key" {
+  description = "The TLS key for the main domain."
+  type        = string
+  sensitive   = true
+}
+
 variable "metal_lb_chart_version" {
   description = "The version of the MetalLB Helm chart to install."
   type        = string

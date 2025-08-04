@@ -56,9 +56,16 @@ module "cilium_setup" {
   cilium_version     = var.cilium_version
   ipam_mode          = var.ipam_mode
   pod_network_cidr   = var.pod_network_cidr
+
   enable_hubble      = var.enable_hubble
   hubble_cli_version = var.hubble_cli_version
   hubble_enabled_ui  = var.hubble_enabled_ui
+  hubble_ui_username = var.hubble_ui_username
+  hubble_ui_password = var.hubble_ui_password
+  hubble_ui_domain   = var.hubble_ui_domain
+
+  main_domain_tls_cert = var.main_domain_tls_cert
+  main_domain_tls_key  = var.main_domain_tls_key
 
   depends_on = [module.k8s_init]
 }

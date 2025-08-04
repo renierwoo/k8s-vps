@@ -56,3 +56,111 @@ resource "terraform_data" "hubble_setup" {
     private_key = var.connection_private_key
   }
 }
+
+
+resource "kubernetes_secret_v1" "hubble_ui_basic_auth" {
+  metadata {
+    annotations = {
+      name = "hubble-ui-basic-auth"
+    }
+
+    labels = {
+      "app.kubernetes.io/name"       = "hubble-ui"
+      "app.kubernetes.io/instance"   = "hubble-ui"
+      "app.kubernetes.io/component"  = "server"
+      "app.kubernetes.io/part-of"    = "hubble"
+      "app.kubernetes.io/managed-by" = "terraform"
+    }
+
+    name      = "hubble-ui-basic-auth"
+    namespace = "kube-system"
+  }
+
+  data = {
+    auth = base64encode("${var.hubble_ui_username}:${var.hubble_ui_password}")
+  }
+
+  type = "Opaque"
+}
+
+
+resource "kubernetes_secret_v1" "hubble_ui_tls" {
+  metadata {
+    annotations = {
+      name = "hubble-ui-tls"
+    }
+
+    labels = {
+      "app.kubernetes.io/name"       = "hubble-ui"
+      "app.kubernetes.io/instance"   = "hubble-ui"
+      "app.kubernetes.io/component"  = "server"
+      "app.kubernetes.io/part-of"    = "hubble"
+      "app.kubernetes.io/managed-by" = "terraform"
+    }
+
+    name      = "hubble-ui-tls"
+    namespace = "kube-system"
+  }
+
+  data = {
+    "tls.crt" = base64encode(var.main_domain_tls_cert)
+    "tls.key" = base64encode(var.main_domain_tls_key)
+  }
+
+  type = "Opaque"
+}
+
+
+resource "kubernetes_ingress_v1" "hubble_ui" {
+  metadata {
+    annotations = {
+      "nginx.ingress.kubernetes.io/auth-type"   = "basic"
+      "nginx.ingress.kubernetes.io/auth-secret" = kubernetes_secret_v1.hubble_ui_basic_auth.metadata[0].name
+      "nginx.ingress.kubernetes.io/auth-realm"  = "Authentication Required"
+    }
+
+    labels = {
+      "app.kubernetes.io/name"       = "hubble-ui"
+      "app.kubernetes.io/instance"   = "hubble-ui"
+      "app.kubernetes.io/component"  = "server"
+      "app.kubernetes.io/part-of"    = "hubble"
+      "app.kubernetes.io/managed-by" = "terraform"
+    }
+
+    name      = "hubble-ui"
+    namespace = "kube-system"
+  }
+
+  spec {
+    ingress_class_name = "nginx"
+
+    rule {
+      host = var.hubble_ui_domain
+
+      http {
+        path {
+          backend {
+            service {
+              name = "hubble-ui"
+
+              port {
+                number = 80
+              }
+            }
+          }
+
+          path      = "/"
+          path_type = "Prefix"
+        }
+      }
+    }
+
+    tls {
+      hosts = [
+        var.hubble_ui_domain
+      ]
+
+      secret_name = kubernetes_secret_v1.hubble_ui_tls.metadata[0].name
+    }
+  }
+}

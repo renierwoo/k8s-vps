@@ -101,6 +101,11 @@ jobs:
       TF_VAR_connection_port: ${{ secrets.CONNECTION_PORT }}
       TF_VAR_connection_user: ${{ secrets.CONNECTION_USER }}
       TF_VAR_connection_private_key: ${{ secrets.CONNECTION_PRIVATE_KEY }}
+      TF_VAR_hubble_ui_username: ${{ secrets.HUBBLE_UI_USERNAME }}
+      TF_VAR_hubble_ui_password: ${{ secrets.HUBBLE_UI_PASSWORD }}
+      TF_VAR_hubble_ui_domain: ${{ secrets.HUBBLE_UI_DOMAIN }}
+      TF_VAR_main_domain_tls_cert: ${{ secrets.MAIN_DOMAIN_TLS_CERT }}
+      TF_VAR_main_domain_tls_key: ${{ secrets.MAIN_DOMAIN_TLS_KEY }}
 
     steps:
       - name: Checkout
