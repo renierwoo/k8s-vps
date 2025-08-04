@@ -29,28 +29,28 @@ resource "helm_release" "main" {
 
   set = [
     {
-      name = "nameOverride"
-      type = "string"
+      name  = "nameOverride"
+      type  = "string"
       value = "ingress-nginx"
     },
     {
-      name = "fullnameOverride"
-      type = "string"
+      name  = "fullnameOverride"
+      type  = "string"
       value = "ingress-nginx"
     },
     {
-      name = "controller.kind"
-      type = "string"
+      name  = "controller.kind"
+      type  = "string"
       value = var.ingress_nginx_controller_kind
     },
     {
-      name = "controller.service.externalTrafficPolicy"
-      type = "string"
+      name  = "controller.service.externalTrafficPolicy"
+      type  = "string"
       value = var.ingress_nginx_controller_external_traffic_policy
     },
     {
-      name = "controller.metrics.enabled"
-      type = "string"
+      name  = "controller.metrics.enabled"
+      type  = "string"
       value = var.ingress_nginx_controller_metrics_enabled
     }
   ]
