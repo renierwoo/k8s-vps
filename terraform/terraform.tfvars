@@ -4,6 +4,7 @@ required_packages = [
   "git",
   "gnupg",
   "net-tools",
+  "python3-systemd",
   "vim"
 ]
 
