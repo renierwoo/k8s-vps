@@ -27,30 +27,33 @@ resource "helm_release" "main" {
   repository  = "https://kubernetes.github.io/ingress-nginx"
   version     = var.ingress_nginx_controller_chart_version
 
-  set {
-    name  = "nameOverride"
-    value = "ingress-nginx"
-  }
-
-  set {
-    name  = "fullnameOverride"
-    value = "ingress-nginx"
-  }
-
-  set {
-    name  = "controller.kind"
-    value = var.ingress_nginx_controller_kind
-  }
-
-  set {
-    name  = "controller.service.externalTrafficPolicy"
-    value = var.ingress_nginx_controller_external_traffic_policy
-  }
-
-  set {
-    name  = "controller.metrics.enabled"
-    value = var.ingress_nginx_controller_metrics_enabled
-  }
+  set = [
+    {
+      name = "nameOverride"
+      type = "string"
+      value = "ingress-nginx"
+    },
+    {
+      name = "fullnameOverride"
+      type = "string"
+      value = "ingress-nginx"
+    },
+    {
+      name = "controller.kind"
+      type = "string"
+      value = var.ingress_nginx_controller_kind
+    },
+    {
+      name = "controller.service.externalTrafficPolicy"
+      type = "string"
+      value = var.ingress_nginx_controller_external_traffic_policy
+    },
+    {
+      name = "controller.metrics.enabled"
+      type = "string"
+      value = var.ingress_nginx_controller_metrics_enabled
+    }
+  ]
 
   depends_on = [kubernetes_namespace.main]
 }
