@@ -22,3 +22,7 @@ hubble_cli_version = "1.17.5"
 hubble_enabled_ui  = true
 
 metal_lb_chart_version = "0.15.2"
+
+ingress_nginx_controller_chart_version           = "4.13.0"
+ingress_nginx_controller_kind                    = "DaemonSet"
+ingress_nginx_controller_external_traffic_policy = "Local"
