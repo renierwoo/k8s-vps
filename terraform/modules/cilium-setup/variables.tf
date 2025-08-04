@@ -72,3 +72,38 @@ variable "hubble_enabled_ui" {
   type        = bool
   default     = false
 }
+
+variable "hubble_ui_username" {
+  description = "Username for Hubble UI."
+  type        = string
+  sensitive   = true
+  default     = null
+}
+
+variable "hubble_ui_password" {
+  description = "Password for Hubble UI."
+  type        = string
+  sensitive   = true
+  default     = null
+}
+
+variable "hubble_ui_domain" {
+  description = "Domain for Hubble UI."
+  type        = string
+  sensitive   = true
+  default     = null
+}
+
+variable "main_domain_tls_cert" {
+  description = "The certificate for the main domain."
+  type        = string
+  sensitive   = true
+  default     = null
+}
+
+variable "main_domain_tls_key" {
+  description = "The private key for the main domain certificate."
+  type        = string
+  sensitive   = true
+  default     = null
+}
