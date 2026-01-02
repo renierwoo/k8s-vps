@@ -5,7 +5,8 @@ required_packages = [
   "gnupg",
   "net-tools",
   "python3-systemd",
-  "vim"
+  "vim",
+  "nano"
 ]
 
 containerd_version      = "2.1.3"
