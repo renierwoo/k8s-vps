@@ -1,4 +1,4 @@
-# resource "kubernetes_namespace_v1" "main" {
+# resource "kubernetes_namespace" "main" {
 #   metadata {
 #     annotations = {
 #       name = "oauth2-proxy"
@@ -22,7 +22,7 @@
 #   name  = "oauth2-proxy"
 
 #   description = "OAuth2 Proxy Helm Chart"
-#   namespace   = kubernetes_namespace_v1.main.metadata[0].name
+#   namespace   = kubernetes_namespace.main.metadata[0].name
 #   repository  = "https://oauth2-proxy.github.io/manifests"
 #   version     = var.oauth2_proxy_chart_version
 
@@ -34,5 +34,5 @@
 #     },
 #   ]
 
-#   depends_on = [kubernetes_namespace_v1.main]
+#   depends_on = [kubernetes_namespace.main]
 # }
