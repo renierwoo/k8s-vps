@@ -27,7 +27,7 @@ resource "terraform_data" "preparation" {
 }
 
 
-resource "kubernetes_namespace" "metal_lb" {
+resource "kubernetes_namespace_v1" "metal_lb" {
   metadata {
     annotations = {
       name = "metallb-system"
@@ -58,11 +58,11 @@ resource "helm_release" "metal_lb_setup" {
   name  = "metallb"
 
   description = "MetalLB is a load-balancer implementation for bare metal Kubernetes clusters."
-  namespace   = kubernetes_namespace.metal_lb.metadata[0].name
+  namespace   = kubernetes_namespace_v1.metal_lb.metadata[0].name
   repository  = "https://metallb.github.io/metallb"
   version     = var.metal_lb_chart_version
 
-  depends_on = [kubernetes_namespace.metal_lb]
+  depends_on = [kubernetes_namespace_v1.metal_lb]
 }
 
 
@@ -73,7 +73,7 @@ resource "kubernetes_manifest" "ip_address_pool" {
 
     "metadata" = {
       "name"      = "metal-lb-pool"
-      "namespace" = kubernetes_namespace.metal_lb.metadata[0].name
+      "namespace" = kubernetes_namespace_v1.metal_lb.metadata[0].name
     }
 
     "spec" = {
@@ -95,7 +95,7 @@ resource "kubernetes_manifest" "l2_advertisement" {
 
     "metadata" = {
       "name"      = "metal-lb-advertisement"
-      "namespace" = kubernetes_namespace.metal_lb.metadata[0].name
+      "namespace" = kubernetes_namespace_v1.metal_lb.metadata[0].name
     }
 
     "spec" = {
