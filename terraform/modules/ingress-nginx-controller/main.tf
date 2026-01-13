@@ -1,4 +1,4 @@
-resource "kubernetes_namespace" "main" {
+resource "kubernetes_namespace_v1" "main" {
   metadata {
     annotations = {
       name = "ingress-nginx"
@@ -23,7 +23,7 @@ resource "helm_release" "main" {
   name  = "ingress-nginx"
 
   description = "Ingress NGINX Controller Helm Chart"
-  namespace   = kubernetes_namespace.main.metadata[0].name
+  namespace   = kubernetes_namespace_v1.main.metadata[0].name
   repository  = "https://kubernetes.github.io/ingress-nginx"
   version     = var.ingress_nginx_controller_chart_version
 
@@ -55,5 +55,5 @@ resource "helm_release" "main" {
     }
   ]
 
-  depends_on = [kubernetes_namespace.main]
+  depends_on = [kubernetes_namespace_v1.main]
 }
